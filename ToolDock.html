@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDV ToolDock V1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="login" class="login">
+  <div class="card login-card">
+    <h1>PDV ToolDock V1</h1>
+    <p>Sistema comercial offline</p>
+    <form id="loginForm" class="stack">
+      <input name="usuario" placeholder="Usuário" required>
+      <input name="senha" type="password" placeholder="Senha" required>
+      <button type="submit" class="primary">Entrar</button>
+    </form>
+    <small>admin / 123 • operador / 123</small>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar" id="sidebar">
+    <button class="ghost sidebar-close" id="sidebarCloseBtn">✕ Fechar</button>
+    <div class="brand">🏪 <div><strong id="brandName">PDV ToolDock V1</strong><br><small id="brandCompany">ToolDock Demo</small></div></div>
+    <button class="nav active" data-tab="vendas">🛒 Vendas</button>
+    <button class="nav" data-tab="produtos">📦 Produtos</button>
+    <button class="nav" data-tab="clientes">👤 Clientes</button>
+    <button class="nav" data-tab="historico">📊 Histórico</button>
+    <button class="nav" data-tab="caixa">💰 Caixa</button>
+    <button class="nav admin-only" data-tab="config">⚙️ Configurações</button>
+    <button class="nav admin-only" data-tab="usuarios">🔐 Usuários</button>
+    <button class="nav" id="logoutBtn">↩️ Sair</button>
+    <div class="userbox"><span id="whoUser"></span><span id="whoRole"></span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left"><button class="ghost menu-toggle" id="menuToggle">☰ Menu</button><div><h1 id="title">Vendas</h1><p id="subtitle">Abra o Caixa para Começar</p></div></div>
+      <div class="top-actions-wrap">
+        <button class="ghost top-action-btn" id="backupBtn">Backup</button>
+        <label class="ghost top-action-btn file-trigger">Restore<input id="restoreInput" type="file" accept=".json" hidden></label>
+      </div>
+    </header>
+
+    <section class="tab active" id="tab-vendas">
+      <div class="sales">
+        <section class="card">
+          <div class="toolbar">
+            <div class="info"><span>Caixa</span><strong id="saleCash">Fechado</strong></div>
+            <div class="info"><span>Pagamento</span><strong id="salePay">Dinheiro</strong></div>
+            <div class="info"><span>Cliente</span><strong id="saleClient">Consumidor Final</strong></div>
+            <div class="inline right">
+              <button type="button" class="ghost" id="openCustomerModal">Selecionar Cliente</button>
+              <button type="button" class="ghost" id="newSaleBtn">Novo Pedido</button>
+            </div>
+          </div>
+
+          <div class="sale-grid">
+            <div class="searchwrap">
+              <label>Produto</label>
+              <input id="search" class="big" placeholder="Buscar por nome ou código. ENTER adiciona. ESC limpa.">
+              <div id="suggestions" class="suggestions hidden"></div>
+            </div>
+            <div><label>Qtd</label><input id="qty" type="number" min="0.001" step="0.001" value="1"></div>
+            <div><label>Unit.</label><input id="price" type="number" min="0" step="0.01" placeholder="Auto"></div>
+            <div><label>&nbsp;</label><button class="primary full" id="addBtn">Adicionar</button></div>
+          </div>
+
+          <div class="tablewrap">
+            <table class="table">
+              <thead><tr><th>Produto</th><th>Qtd</th><th>Unit.</th><th>Total</th><th>Ação</th></tr></thead>
+              <tbody id="saleRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="card sticky">
+          <div class="info"><span>Subtotal</span><strong id="subtotal">R$ 0,00</strong></div>
+          <div class="twocol">
+            <div><label>Desconto</label><input id="discount" type="number" min="0" step="0.01" value="0"></div>
+            <div><label>Acréscimo</label><input id="extra" type="number" min="0" step="0.01" value="0"></div>
+          </div>
+          <div class="totalbox"><span>Total</span><strong id="total">R$ 0,00</strong></div>
+          <div class="paybuttons">
+            <button class="pay active" data-pay="Dinheiro">Dinheiro</button>
+            <button class="pay" data-pay="PIX">PIX</button>
+            <button class="pay" data-pay="Cartão">Cartão</button>
+          </div>
+          <div class="twocol">
+            <div><label>Recebido</label><input id="received" type="number" min="0" step="0.01" value="0"></div>
+            <div><label>Troco</label><div id="change" class="change">R$ 0,00</div></div>
+          </div>
+          <label>Observações</label>
+          <textarea id="notes"></textarea>
+          <div class="twocol top"><button class="ghost" id="printA4">Imprimir A4</button><button class="ghost" id="print80">Imprimir 80mm</button></div>
+          <div class="stack top"><button type="button" class="success" id="finishSale">Finalizar Venda</button><button type="button" class="danger" id="cancelSale">Cancelar Venda</button></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-produtos">
+      <div class="card">
+        <h2>Produtos</h2>
+        <form id="productForm" class="grid2">
+          <input type="hidden" name="id">
+          <input name="codigo" id="productCodeInput" placeholder="Código" required>
+          <small class="field-help" id="productCodeHint">Código sugerido automaticamente ao criar novo produto.</small>
+          <input name="nome" placeholder="Nome" required>
+          <input name="preco" type="number" min="0" step="0.01" placeholder="Preço" required>
+          <input name="custo" type="number" min="0" step="0.01" placeholder="Custo">
+          <input name="estoque" type="number" min="0" step="0.001" placeholder="Estoque" required>
+          <input name="estoque_minimo" type="number" min="0" step="0.001" placeholder="Estoque mínimo" required>
+          <div class="inline"><button type="submit" class="primary">Salvar</button><button type="button" class="ghost" id="clearProduct">Limpar</button></div>
+        </form>
+        <hr>
+        <input id="productSearch" placeholder="Buscar produto por nome ou código">
+        <div class="tablewrap"><table class="table"><thead><tr><th>Código</th><th>Produto</th><th>Preço</th><th>Custo</th><th>Estoque</th><th>Mínimo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="productRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-clientes">
+      <div class="card">
+        <h2>Clientes</h2>
+        <form id="customerForm" class="grid2">
+          <input type="hidden" name="id">
+          <input name="nome" placeholder="Nome" required>
+          <input name="telefone" placeholder="Telefone" required>
+          <input name="endereco" placeholder="Endereço">
+          <textarea name="observacao" placeholder="Observação"></textarea>
+          <div class="inline"><button type="submit" class="primary">Salvar</button><button type="button" class="ghost" id="clearCustomer">Limpar</button></div>
+        </form>
+        <hr>
+        <input id="customerSearch" placeholder="Buscar cliente por nome ou telefone">
+        <div class="tablewrap"><table class="table"><thead><tr><th>Nome</th><th>Telefone</th><th>Endereço</th><th>Ações</th></tr></thead><tbody id="customerRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-historico">
+      <div class="card">
+        <h2>Histórico</h2>
+        <div class="stats">
+          <div class="info"><span>Vendas do dia</span><strong id="dayCount">0</strong></div>
+          <div class="info"><span>Total vendido</span><strong id="dayTotal">R$ 0,00</strong></div>
+          <div class="info"><span>Dinheiro</span><strong id="dayMoney">R$ 0,00</strong></div>
+          <div class="info"><span>PIX</span><strong id="dayPix">R$ 0,00</strong></div>
+          <div class="info"><span>Cartão</span><strong id="dayCard">R$ 0,00</strong></div>
+          <div class="info"><span>Mais vendido</span><strong id="dayTop">-</strong></div>
+        </div>
+        <div class="toolbar2">
+          <input id="historySearch" placeholder="Buscar por cliente, item, pagamento ou pedido">
+          <select id="historyPayment"><option value="">Todos pagamentos</option><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
+          <select id="historyStatus"><option value="">Todos status</option><option>finalizado</option><option>cancelado</option></select>
+        </div>
+        <div class="tablewrap"><table class="table"><thead><tr><th>Pedido</th><th>Data</th><th>Cliente</th><th>Pagamento</th><th>Status</th><th>Total</th><th>Ações</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-caixa">
+      <div class="card">
+        <h2>Caixa</h2>
+        <div class="stats">
+          <div class="info"><span>Status</span><strong id="cashStatus">Fechado</strong></div>
+          <div class="info"><span>Usuário do caixa</span><strong id="cashUser">-</strong></div>
+          <div class="info"><span>Saldo inicial</span><strong id="cashInitial">R$ 0,00</strong></div>
+          <div class="info"><span>Total vendas</span><strong id="cashSales">R$ 0,00</strong></div>
+          <div class="info"><span>Dinheiro</span><strong id="cashMoney">R$ 0,00</strong></div>
+          <div class="info"><span>PIX</span><strong id="cashPix">R$ 0,00</strong></div>
+          <div class="info"><span>Cartão</span><strong id="cashCard">R$ 0,00</strong></div>
+        </div>
+        <div class="admin3">
+          <div class="card inner"><h3>Abertura</h3><form id="openCashForm" class="stack"><input name="valorInicial" type="number" min="0" step="0.01" placeholder="Valor inicial" required><button type="submit" class="primary">Abrir Caixa</button></form></div>
+          <div class="card inner"><h3>Movimentos</h3><form id="moveCashForm" class="stack"><select name="tipo"><option value="suprimento">Suprimento</option><option value="sangria">Sangria</option></select><input name="valor" type="number" min="0" step="0.01" placeholder="Valor" required><input name="descricao" placeholder="Descrição"><button type="submit" class="warning">Lançar Movimento</button></form></div>
+          <div class="card inner"><h3>Fechamento</h3><form id="closeCashForm" class="stack"><input id="expectedCash" disabled><input name="valorContado" type="number" min="0" step="0.01" placeholder="Valor contado" required><div id="cashDifference" class="diff">Diferença: R$ 0,00</div><button type="submit" class="danger">Fechar Caixa</button></form></div>
+        </div>
+        <div class="inline top"><button type="button" class="ghost" id="printCashMovements">Imprimir Movimentação do Caixa</button></div>
+        <div class="tablewrap"><table class="table"><thead><tr><th>Data</th><th>Tipo</th><th>Valor</th><th>Descrição</th></tr></thead><tbody id="cashRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-config">
+      <div class="card">
+        <h2>Configurações</h2>
+        <form id="settingsForm" class="grid2">
+          <input name="nomeSistema" placeholder="Nome do sistema" required>
+          <input name="empresa" placeholder="Nome da empresa" required>
+          <input name="nomeFantasia" placeholder="Nome fantasia">
+          <input name="cnpj" placeholder="CNPJ">
+          <input name="telefone" placeholder="Telefone">
+          <input name="cidade" placeholder="Cidade">
+          <input name="endereco" placeholder="Endereço completo">
+          <input name="corSistema" type="color">
+          <textarea name="mensagemCupom" placeholder="Mensagem do cupom"></textarea>
+          <button type="submit" class="primary">Salvar Configurações</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-usuarios">
+      <div class="card">
+        <h2>Usuários</h2>
+        <form id="userForm" class="grid2">
+          <input type="hidden" name="id">
+          <input name="usuario" placeholder="Usuário" required>
+          <input name="senha" type="password" placeholder="Senha" required>
+          <select name="tipo"><option value="admin">admin</option><option value="operador">operador</option></select>
+          <div class="inline"><button type="submit" class="primary">Salvar</button><button type="button" class="ghost" id="clearUser">Limpar</button></div>
+        </form>
+        <div class="tablewrap"><table class="table"><thead><tr><th>Usuário</th><th>Tipo</th><th>Ações</th></tr></thead><tbody id="userRows"></tbody></table></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="customerModal" class="modal hidden">
+  <div class="card modalcard">
+    <div class="inline between"><h2>Selecionar Cliente</h2><button class="ghost" id="closeCustomerModal">Fechar</button></div>
+    <input id="saleCustomerSearch" placeholder="Buscar por nome ou telefone">
+    <div class="tablewrap"><table class="table"><thead><tr><th>Nome</th><th>Telefone</th><th>Endereço</th><th>Ação</th></tr></thead><tbody id="saleCustomerRows"></tbody></table></div>
+  </div>
+</div>
+
+<div id="cancelModal" class="modal hidden">
+  <div class="card modalcard">
+    <div class="inline between"><h2>Cancelar Venda</h2><button class="ghost" id="closeCancelModal">Fechar</button></div>
+    <form id="cancelForm" class="stack">
+      <input type="hidden" name="pedidoId">
+      <textarea name="motivo" placeholder="Motivo do cancelamento" required></textarea>
+      <button type="submit" class="danger">Confirmar Cancelamento</button>
+    </form>
+  </div>
+</div>
+
+<section id="printArea" class="print-area"></section>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+PDV Elite Market V10.4
+
+Melhorias desta revisão:
+- totais do caixa passam a representar somente o caixa atualmente aberto
+- abertura do caixa zera os acumuladores da nova sessão
+- identificação do usuário que abriu o caixa
+- bloqueio de vendas quando o caixa não estiver aberto
+- bloqueio de venda e movimentação quando o caixa pertencer a outro usuário
+- botão de impressão da movimentação do caixa
+- exibição do usuário responsável pelo caixa na tela de caixa e na venda
+
+Usuários:
+- admin / 123
+- operador / 123

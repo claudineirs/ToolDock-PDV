@@ -1,0 +1,111 @@
+{
+  "config": {
+    "nomeSistema": "PDV Elite Market V9",
+    "empresa": "Elite Market Demo",
+    "nomeFantasia": "Elite Market",
+    "cnpj": "",
+    "telefone": "(11) 4000-9000",
+    "cidade": "São Paulo",
+    "endereco": "Rua Exemplo, 100",
+    "corSistema": "#123f7a",
+    "mensagemCupom": "Obrigado pela preferência!"
+  },
+  "produtos": [
+    {
+      "id": 1,
+      "codigo": "1001",
+      "nome": "Coca-Cola 2L",
+      "preco": 9.99,
+      "custo": 6.2,
+      "estoque": 24,
+      "estoque_minimo": 6
+    },
+    {
+      "id": 2,
+      "codigo": "1002",
+      "nome": "Arroz Tipo 1 5kg",
+      "preco": 24.9,
+      "custo": 19.3,
+      "estoque": 12,
+      "estoque_minimo": 4
+    },
+    {
+      "id": 3,
+      "codigo": "1003",
+      "nome": "Feijão Carioca 1kg",
+      "preco": 8.5,
+      "custo": 6.1,
+      "estoque": 18,
+      "estoque_minimo": 5
+    },
+    {
+      "id": 4,
+      "codigo": "1004",
+      "nome": "Pizza Calabresa Grande",
+      "preco": 49.9,
+      "custo": 26.5,
+      "estoque": 8,
+      "estoque_minimo": 2
+    },
+    {
+      "id": 5,
+      "codigo": "1005",
+      "nome": "Leite Integral 1L",
+      "preco": 5.89,
+      "custo": 4.1,
+      "estoque": 30,
+      "estoque_minimo": 8
+    },
+    {
+      "id": 6,
+      "codigo": "1006",
+      "nome": "Chocolate Premium 90g",
+      "preco": 12.5,
+      "custo": 8.0,
+      "estoque": 4,
+      "estoque_minimo": 5
+    }
+  ],
+  "clientes": [
+    {
+      "id": 1,
+      "nome": "Mariana Silva",
+      "telefone": "(11) 99800-1111",
+      "endereco": "Rua das Flores, 120",
+      "observacao": ""
+    },
+    {
+      "id": 2,
+      "nome": "Carlos Andrade",
+      "telefone": "(11) 99700-2020",
+      "endereco": "Av. Central, 455",
+      "observacao": "Cliente frequente"
+    }
+  ],
+  "pedidos": [],
+  "caixa": {
+    "aberto": false,
+    "valorInicial": 0,
+    "totalVendas": 0,
+    "totalDinheiro": 0,
+    "totalPix": 0,
+    "totalCartao": 0,
+    "movimentos": [],
+    "ultimoNumeroPedido": 0
+  },
+  "usuarios": [
+    {
+      "id": 1,
+      "usuario": "admin",
+      "senha": "123",
+      "tipo": "admin"
+    },
+    {
+      "id": 2,
+      "usuario": "operador",
+      "senha": "123",
+      "tipo": "operador"
+    }
+  ],
+  "logs": []
+}
